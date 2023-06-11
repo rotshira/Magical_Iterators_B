@@ -29,10 +29,10 @@ MagicalContainer::~MagicalContainer()
 void MagicalContainer::addElement(int element)
 {
     elements.push_back(element); // Add the element to the elements vector
-
+    int* newelement = new int(element);
     if (isPrime(element)) // Check if the element is prime
     {
-        numbers_prime.push_back(element); // If it is prime, add it to the prime numbers vector
+        numbers_prime.push_back(newelement); // If it is prime, add it to the prime numbers vector
     }
 }
 
@@ -65,7 +65,8 @@ const std::vector<int>& MagicalContainer::getElements() const
 }
 
 // Function to get a constant reference to the prime numbers vector
-const std::vector<int>& MagicalContainer::get_primes() const
+const std::vector<int*>&
+ MagicalContainer::get_primes() const
 {
     return numbers_prime;
 }
@@ -86,10 +87,23 @@ bool MagicalContainer::isPrime(int number)
 }
 
 // Function to delete an element from a vector
-void MagicalContainer::delete_(std::vector<int>& vector_, int n)
-{
-    vector_.erase(std::remove(vector_.begin(), vector_.end(), n), vector_.end());
-}
+// void MagicalContainer::delete_(std::vector<int>& vector_, int n)
+// {
+//     vector_.erase(std::remove(vector_.begin(), vector_.end(), n), vector_.end());
+// }
+
+ void MagicalContainer::delete_(std::vector<int*>& vector, int n)
+  {
+        for (auto it = vector.begin(); it != vector.end(); ++it) 
+        {
+            if (**it == n ) 
+            {
+                delete *it;
+                vector.erase(it);
+                break;
+            }
+        }
+    }
 
 // Function to get the size of the container
 int MagicalContainer::size() const
@@ -414,19 +428,24 @@ bool MagicalContainer::PrimeIterator::operator<(const PrimeIterator& other) cons
 // Dereference operator for PrimeIterator
 int MagicalContainer::PrimeIterator::operator*()
 {
+    std::vector<int> sortedElements;
     if (currentIndex >= this->container.get_primes().size())
     {
         throw std::runtime_error("Iterator out of range");
     }
     
-    std::vector<int> sortedElements = container.get_primes();
+    sortedElements.reserve(container.get_primes().size());
+    for (int* it : container.get_primes()) 
+        {
+            sortedElements.push_back(*it);
+        }
     std::sort(sortedElements.begin(), sortedElements.end());
     // Sort the prime elements in ascending order
 
     return sortedElements[static_cast<std::vector<int>::size_type>(currentIndex)];
     // Return the prime element at the current index
 }
-
+    
 // Pre-increment operator for PrimeIterator
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++()
 {

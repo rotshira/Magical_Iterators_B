@@ -11,7 +11,8 @@ namespace ariel
     {
     private:
         std::vector<int> elements; // The container to store elements
-        std::vector<int> numbers_prime; // Container to store prime numbers
+        std::vector<int*> numbers_prime;//to store primes elements
+
         
     public:
         // Constructors
@@ -26,9 +27,9 @@ namespace ariel
         void addElement(int element); // Add an element to the container
         void removeElement(int element); // Remove an element from the container
         const std::vector<int>& getElements() const; // Get a const reference to the elements
-        const std::vector<int>& get_primes() const; // Get a const reference to the prime numbers
+        const std::vector<int*>& get_primes() const; // Get a const reference to the prime numbers
         bool isPrime(int number); // Check if a number is prime
-        void delete_(std::vector<int>& vec, int value); // Helper function to delete an element from a vector (to prime)
+        void delete_(std::vector<int*>& vector, int n); // Helper function to delete an element from a vector (to prime)
         int size() const; // Get the size of the container
         
         // Nested iterator classes
